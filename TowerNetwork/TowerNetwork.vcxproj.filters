@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{896a283e-e78e-4280-85eb-cdeebd2629f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\App">
+      <UniqueIdentifier>{80181c6f-f5b1-441c-8ff3-8bcb753df945}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\TowerContainer">
+      <UniqueIdentifier>{14df3af7-04e7-4308-9ae1-5a87889c4e75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Tower">
+      <UniqueIdentifier>{71cda81b-b83e-458a-acc8-62930dca2ee7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test_Listener.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\App.cpp">
+      <Filter>Classes\App</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Command.cpp">
+      <Filter>Classes\App</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Signal.cpp">
+      <Filter>Classes\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Tower.cpp">
+      <Filter>Classes\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\TowerNetwork.cpp">
+      <Filter>Classes\TowerContainer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Classes\Command.h">
+      <Filter>Classes\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\App.h">
+      <Filter>Classes\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Signal.h">
+      <Filter>Classes\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Tower.h">
+      <Filter>Classes\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\TowerNetwork.h">
+      <Filter>Classes\TowerContainer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

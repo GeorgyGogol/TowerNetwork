@@ -25,6 +25,12 @@
     <Filter Include="Classes\Tower">
       <UniqueIdentifier>{71cda81b-b83e-458a-acc8-62930dca2ee7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\Service">
+      <UniqueIdentifier>{b60ff2fa-6d91-4228-9a14-e099f3627fc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Tower\Abstract">
+      <UniqueIdentifier>{547b6786-f2a2-4366-b7e9-0261eb657a93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test_Listener.cpp">
@@ -45,6 +51,15 @@
     <ClCompile Include="Classes\TowerNetwork.cpp">
       <Filter>Classes\TowerContainer</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Logger.cpp">
+      <Filter>Classes\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Abstract\TowerNode.cpp">
+      <Filter>Classes\Tower\Abstract</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\StructPrinter.cpp">
+      <Filter>Classes\Service</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\Command.h">
@@ -61,6 +76,15 @@
     </ClInclude>
     <ClInclude Include="Classes\TowerNetwork.h">
       <Filter>Classes\TowerContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Logger.h">
+      <Filter>Classes\Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Abstract\TowerNode.h">
+      <Filter>Classes\Tower\Abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\StructPrinter.h">
+      <Filter>Classes\Service</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

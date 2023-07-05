@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Classes;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)Classes;$(ProjectDir)Classes\Abstract;$(ProjectDir)Service;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -140,19 +140,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Classes\Abstract\TowerNode.cpp" />
     <ClCompile Include="Classes\App.cpp" />
     <ClCompile Include="Classes\Command.cpp" />
     <ClCompile Include="Classes\Signal.cpp" />
     <ClCompile Include="Classes\Tower.cpp" />
     <ClCompile Include="Classes\TowerNetwork.cpp" />
+    <ClCompile Include="Service\Logger.cpp" />
+    <ClCompile Include="Service\StructPrinter.cpp" />
     <ClCompile Include="test_Listener.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Classes\Abstract\TowerNode.h" />
     <ClInclude Include="Classes\App.h" />
     <ClInclude Include="Classes\Command.h" />
     <ClInclude Include="Classes\Signal.h" />
     <ClInclude Include="Classes\Tower.h" />
     <ClInclude Include="Classes\TowerNetwork.h" />
+    <ClInclude Include="Service\Logger.h" />
+    <ClInclude Include="Service\StructPrinter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

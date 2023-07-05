@@ -20,8 +20,8 @@ namespace ntw {
 		int curTower = -1;
 
 		bool init();
-		IntCom inputComand();
-		
+
+		IntCom inputComand();		
 		void completeCommand(IntCom& com);
 
 	public:

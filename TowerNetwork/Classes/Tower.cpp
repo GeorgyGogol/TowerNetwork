@@ -1,18 +1,14 @@
 #include "Tower.h"
 
-#include <sstream>
-
+//#include <sstream>
+#include <string>
 #include "Signal.h"
 
-//bool ntw::Tower::isOutStreamSetted = false;
-std::ostream* ntw::Tower::outStream = nullptr;
-
-ntw::Tower::Tower(int number) :
+ntw::Tower::Tower(int number) : 
+	abstr::TowerNode(),
 	TowerNumber(number)
 {
-	//Listeners = new std::vector<Tower*>;
-	if (outStream)
-		(*outStream) << "Created tower " << int(this) << " num " << TowerNumber << std::endl;
+	log() << "Created tower " << int(this) << " num " << TowerNumber << "\n";
 }
 
 //ntw::Tower::~Tower()
@@ -22,112 +18,154 @@ ntw::Tower::Tower(int number) :
 
 void ntw::Tower::sendToListeners(const Signal& signal)
 {
-	for (auto each : Listeners) {
-		each->Recieve(signal);
+	Tower* pTower;
+	for (Iterator it = Begin(); it != End(); ++it) {
+		pTower = static_cast<Tower*>(*it);
+		pTower->Recieve(signal);
 	}
 }
 
 int ntw::Tower::getTowerNumber() const noexcept
 {
-	return TowerNumber;
+    return TowerNumber;
 }
 
 bool ntw::Tower::isHaveAnswer() const noexcept
 {
-	return IsNeedSendAnswer;
+    return IsNeedSendAnswer;
 }
 
 int ntw::Tower::getAnswer() const noexcept
 {
-	return TypeAnswer;
-}
-
-void ntw::Tower::printLog(const std::string& str)
-{
-	if (!outStream) return;
-
-	(*outStream) << "Tower " << TowerNumber << " " << str << std::endl;
+    return AnswerData;
 }
 
 void ntw::Tower::setAnswer(int tAns) noexcept
 {
-	IsNeedSendAnswer = true;
-	TypeAnswer = tAns;
+    IsNeedSendAnswer = true;
+    AnswerData = tAns;
 }
 
 void ntw::Tower::ConnectWith(Tower* pTower)
 {
-	if (pTower == this) {
-		printLog("cannot self-connect");
-		return;
-	}
-	Listeners.push_back(pTower);
-	std::stringstream ss;
-	ss << "connected with Tower " << pTower->getTowerNumber();
-	printLog(ss.str());
+    std::string message;
+    int error = addConnect(pTower);
+    switch (error)
+    {
+    case 1:
+        message = "Cannot self-connect";
+        break;
+
+    case 2:
+        message = 
+            "Cannot connect with already connected tower " 
+            + std::to_string(pTower->getTowerNumber());
+        break;
+    
+    case 0:
+    default:
+        message = "Connected with "
+            + std::to_string(pTower->getTowerNumber());
+        break;
+    }
+
+    if(error)
+        logError(message, TowerNumber);
+    else
+        logPrint(message, TowerNumber);
+
 }
 
-int ntw::Tower::getConnectedCount() const noexcept
-{
-	return Listeners.size();
-}
+//ntw::Tower* ntw::Tower::getConnected(int numConnected) const
+//{
+//    return Listeners[numConnected];
+//}
 
-ntw::Tower* ntw::Tower::getConnected(int numConnected) const
+void ntw::Tower::ConnectTwoWayWith(Tower* pTower)
 {
-	return Listeners[numConnected];
+    std::string message;
+    int error1, error2;
+
+    error1 = addConnect(pTower);
+
+    if(!error1) {
+        error2 = pTower->addConnect(this);
+
+		switch (error2)
+		{
+		case 2:
+			message =
+				"Tower " + std::to_string(pTower->getTowerNumber())
+				+" already connected with "
+				+ "Tower " + std::to_string(TowerNumber);
+			break;
+			break;
+
+		default:
+			break;
+		}
+    }
+    else {
+        switch (error1)
+        {
+        case 1:
+            message = "Cannot self-connect";
+            break;
+
+        case 2:
+			message = 
+				"Tower " + std::to_string(TowerNumber)
+				+ " already connected with "
+				+ "Tower " + std::to_string(pTower->getTowerNumber());
+            break;
+        
+        default:
+            break;
+        }
+    }
+
+    if(error1 || error2)
+        logError(message);
+    else {
+		message =
+			"Sucssesful two-way connect towers "
+			+ std::to_string(TowerNumber)
+			+ " and "
+			+ std::to_string(pTower->getTowerNumber());
+        logPrint(message);
+    }
 }
 
 void ntw::Tower::Send(int data, bool resend)
 {
-	Signal sig(this, data);
-	if (resend) sig.Type = SignalType::Resend;
-	sendToListeners(sig);
+    Signal sig(this, data);
+    if (resend) sig.Type = SignalType::Resend;
+    sendToListeners(sig);
 }
 
 void ntw::Tower::Recieve(const Signal& signal)
 {
-	std::stringstream ss;
-	ss << "recive " << signal;
-	printLog(ss.str());
+	logPrint(signal, TowerNumber);
 
-	if (signal.Sender && IsNeedSendAnswer && signal.Type != SignalType::Answer) {
-		Signal answer(SignalType::Answer, this, TypeAnswer);
-		signal.Sender->Recieve(answer);
-	}
+    if (signal.Sender && IsNeedSendAnswer && signal.Type != SignalType::Answer) {
+        Signal answer(SignalType::Answer, this, AnswerData);
+        signal.Sender->Recieve(answer);
+    }
 
-	if (signal.Type == SignalType::Resend) {
-		sendToListeners(signal);
-		Signal answer(SignalType::Answer, this, Listeners.size());
-		signal.Sender->Recieve(answer);
-	}
+    if (signal.Type == SignalType::Resend) {
+        sendToListeners(signal);
+        Signal answer(SignalType::Answer, this, getConnectedCount());
+        signal.Sender->Recieve(answer);
+    }
 }
 
-void ntw::Tower::setOutStream(std::ostream& stream)
+void ntw::ConnectTowers(Tower* pTow1, Tower* pTow2, bool twoWayCommun)
 {
-	//isOutStreamSetted = true;
-	outStream = &stream;
+	if (!twoWayCommun) {
+		pTow1->ConnectWith(pTow2);
+	}
+	else {
+		pTow1->ConnectTwoWayWith(pTow2);
+	}
 }
 
-std::string ntw::SubStructure(const Tower* pNode, int step)
-{
-	std::stringstream ss;
-
-	for (int i = 0; i < step; ++i) ss << "\t";
-	ss << "Tower:" << int(pNode) << " num:" << pNode->getTowerNumber();
-	if (pNode->isHaveAnswer()) ss << " ans:" << pNode->getAnswer();
-
-	int nSubs = pNode->getConnectedCount();
-	if (nSubs) {
-		ss << " subs:" << nSubs;
-	}
-
-	ss << '\n';
-
-	if (nSubs) {
-		for (int i = 0; i < nSubs; ++i) {
-			ss << SubStructure(pNode->getConnected(i), step + 1);
-		}
-	}
-
-	return ss.str();
-}

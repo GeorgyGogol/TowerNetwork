@@ -43,10 +43,10 @@ ntw::Command<TyValue>::Command(Command&& from) noexcept :
 }
 
 template<typename TyValue>
-ntw::Command<TyValue>::~Command()
+ntw::Command<TyValue>::~Command() noexcept
 {
 	if (VArg) {
-		delete VArg;
+		delete[] VArg;
 		VArg = nullptr;
 	}
 }
@@ -55,12 +55,34 @@ template<typename TyValue>
 ntw::Command<TyValue>& ntw::Command<TyValue>::operator=(const Command& src)
 {
 	if (this != &src) {
+		if (VArg) {
+			delete[] VArg;
+			VArg = nullptr;
+		}
+
 		Type = src.Type;
 		Arg = src.Arg;
 		NArgs = src.NArgs;
 		VArg = new int[NArgs];
 		for (int i = 0; i < NArgs; ++i)
 			VArg[i] = src.VArg[i];
+	}
+	return *this;
+}
+
+template<typename TyValue>
+ntw::Command<TyValue>& ntw::Command<TyValue>::operator=(Command&& src) noexcept
+{
+	if (this != &src) {
+		if (VArg) delete[] VArg;
+
+		Type = src.Type;
+		Arg = src.Arg;
+		NArgs = src.NArgs;
+		VArg = src.VArg;
+
+		src.NArgs = 0;
+		src.VArg = nullptr;
 	}
 	return *this;
 }

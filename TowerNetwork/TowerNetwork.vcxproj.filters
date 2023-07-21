@@ -31,6 +31,9 @@
     <Filter Include="Classes\Tower\Abstract">
       <UniqueIdentifier>{547b6786-f2a2-4366-b7e9-0261eb657a93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\Service\Printers">
+      <UniqueIdentifier>{e71b6385-9015-49b3-bfb5-acac47fae11f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test_Listener.cpp">
@@ -57,8 +60,14 @@
     <ClCompile Include="Classes\Abstract\TowerNode.cpp">
       <Filter>Classes\Tower\Abstract</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\Abstract\TowerSize.cpp">
+      <Filter>Classes\Tower\Abstract</Filter>
+    </ClCompile>
     <ClCompile Include="Service\StructPrinter.cpp">
-      <Filter>Classes\Service</Filter>
+      <Filter>Classes\Service\Printers</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\InfoPrinter.cpp">
+      <Filter>Classes\Service\Printers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,8 +92,14 @@
     <ClInclude Include="Classes\Abstract\TowerNode.h">
       <Filter>Classes\Tower\Abstract</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\Abstract\TowerSize.h">
+      <Filter>Classes\Tower\Abstract</Filter>
+    </ClInclude>
     <ClInclude Include="Service\StructPrinter.h">
-      <Filter>Classes\Service</Filter>
+      <Filter>Classes\Service\Printers</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\InfoPrinter.h">
+      <Filter>Classes\Service\Printers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

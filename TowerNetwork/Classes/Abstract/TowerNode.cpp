@@ -4,17 +4,25 @@ using namespace ntw::abstr;
 
 ntw::abstr::TowerNode::TowerNode()
 {
+    maxSize = to_int(TowerSize::Default);
 }
 
-ntw::abstr::TowerNode::TowerNode(const TowerNode& src)
+ntw::abstr::TowerNode::TowerNode(const TowerNode& src) :
+    maxSize(src.maxSize)
 {
     ConnectedSubs = src.ConnectedSubs;
 }
 
-ntw::abstr::TowerNode::TowerNode(TowerNode&& from) noexcept
+ntw::abstr::TowerNode::TowerNode(TowerNode&& from) noexcept :
+    maxSize(from.maxSize)
 {
 	ConnectedSubs.assign(from.ConnectedSubs.begin(), from.ConnectedSubs.end());
     from.ConnectedSubs.clear();
+}
+
+ntw::abstr::TowerNode::TowerNode(const TowerSize& size)
+{
+    maxSize = to_int(size);
 }
 
 ntw::abstr::TowerNode::~TowerNode()
@@ -27,6 +35,7 @@ ntw::abstr::TowerNode::~TowerNode()
 TowerNode& ntw::abstr::TowerNode::operator=(const TowerNode& src)
 {
     if (&src != this) {
+        maxSize = src.maxSize;
 		ConnectedSubs.assign(src.ConnectedSubs.begin(), src.ConnectedSubs.end());
     }
     return *this;
@@ -35,6 +44,7 @@ TowerNode& ntw::abstr::TowerNode::operator=(const TowerNode& src)
 TowerNode &ntw::abstr::TowerNode::operator=(TowerNode &&from) noexcept
 {
     if (&from != this) {
+        maxSize = from.maxSize;
 		ConnectedSubs.assign(from.ConnectedSubs.begin(), from.ConnectedSubs.end());
         from.ConnectedSubs.clear();
     }
@@ -43,6 +53,9 @@ TowerNode &ntw::abstr::TowerNode::operator=(TowerNode &&from) noexcept
 
 int ntw::abstr::TowerNode::addConnect(TowerNode* pNode)
 {
+    if (ConnectedSubs.size() == maxSize) {
+        return 4;
+    }
     if (pNode == this) {
         return 1;
     }
@@ -74,6 +87,11 @@ int ntw::abstr::TowerNode::removeConnect(int nConnection)
         return 0;
     }
     return 3;
+}
+
+void ntw::abstr::TowerNode::removeLastConnect()
+{
+    ConnectedSubs.pop_back();
 }
 
 TowerNode::Iterator TowerNode::Begin() noexcept
@@ -116,6 +134,11 @@ bool ntw::abstr::TowerNode::isConnected(TowerNode* pTower, Iterator& seekIterato
 int ntw::abstr::TowerNode::getConnectedCount() const noexcept
 {
     return ConnectedSubs.size();
+}
+
+int ntw::abstr::TowerNode::getConnectedLimit() const noexcept
+{
+    return maxSize;
 }
 
 TowerNode* ntw::abstr::TowerNode::getAt(int nConnection)

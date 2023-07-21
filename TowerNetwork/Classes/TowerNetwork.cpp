@@ -1,6 +1,7 @@
 #include "TowerNetwork.h"
 
 #include "Tower.h"
+#include "TowerSize.h"
 
 int ntw::TowerNetwork::NextTowerNumber = 0;
 
@@ -22,6 +23,16 @@ ntw::Tower* ntw::TowerNetwork::CreateTower()
 	NextTowerNumber++;
 
 	return pTow;
+}
+
+ntw::Tower* ntw::TowerNetwork::CreateTower(const TowerSize& size)
+{
+    Tower* pTow = new Tower(NextTowerNumber, size);
+    Towers[NextTowerNumber] = pTow;
+
+    NextTowerNumber++;
+
+    return pTow;
 }
 
 ntw::Tower* ntw::TowerNetwork::GetTowerByNumber(int nTower)
@@ -50,4 +61,15 @@ void ntw::TowerNetwork::ConnectTowers(int nSender, int nReciver)
 
 	sen->ConnectWith(rec);
 
+}
+
+void ntw::TowerNetwork::DisconnectTowers(int nSender, int nReciver)
+{
+    Tower* sen;
+    Tower* rec;
+
+    sen = Towers.at(nSender);
+    rec = Towers.at(nReciver);
+
+    sen->DisconnectWith(rec);
 }

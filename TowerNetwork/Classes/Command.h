@@ -8,15 +8,20 @@
 namespace ntw {
 
     /// @brief Перечисление типов управляющих команд
-    enum class ComandType : short
+    enum class CommandType : short
     {
-        NoComand = -1,
-        Exit = 0,
-        SetTower, SetAnswer,
-        Send, SendToAll,
-        Connect,
-        Create,
-        PrintNetwork
+        InptError = -2, ///< Ошибка ввода
+        NoComand = -1,  ///< Нет команды
+        Exit = 0,       ///< Выход
+        SetTower,       ///< Выбрать башню
+        SetAnswer,      ///< Установить ответ башни
+        SendBy,         ///< Отправить по номеру соединения
+        SendToAll,      ///< Отправить всем подписчикам
+        Connect,        ///< Соединить башни
+        Create,         ///< Создать башню(и)
+        PrintNetwork,   ///< Напечатать сеть
+        PrintInfo,      ///< Напечатать информацию о башне
+        Disconnect      ///< Разъединить башни
     };
 
     /**
@@ -35,7 +40,7 @@ namespace ntw {
     public:
         Command();
         Command(int nAgruments);
-        Command(ComandType type, TyValue arg);
+        Command(CommandType type, TyValue arg);
         
         Command(const Command& src);
         Command(Command&& from) noexcept;
@@ -53,7 +58,7 @@ namespace ntw {
 
     public:
         /// @brief Тип команды
-        ComandType Type = ComandType::NoComand;
+        CommandType Type = CommandType::NoComand;
 
         /// @brief Единичный аргумент (как открытое свойство)
         TyValue Arg = 0;
@@ -61,6 +66,12 @@ namespace ntw {
         /// @brief Метод для установки кол-ва аргументов
         /// @param nAgruments Число аргументов команды
         void setArgCount(int nAgruments);
+
+        /// @brief Метод для установки количества аргументов со значеним
+        /// по-умолчанию
+        /// @param nAgruments Число аргументов команды
+        /// @param defValue Присваемое значение
+        void setArgCount(int nAgruments, TyValue defValue);
 
         /// @brief Метод, возвращающий кол-во аргументов
         /// @return Число аргументов команды

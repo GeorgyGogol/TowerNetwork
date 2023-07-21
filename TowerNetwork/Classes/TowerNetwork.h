@@ -9,6 +9,7 @@
 namespace ntw {
 
 	class Tower;
+    enum class TowerSize : unsigned short;
 
 	/**
 	 * @brief Класс сети башен
@@ -23,8 +24,6 @@ namespace ntw {
 		~TowerNetwork() = default;
 
 	private:
-		//int CurrentTowers = 0;
-
 		/// @brief Следующий уникальный номер
 		static int NextTowerNumber;
 
@@ -32,9 +31,15 @@ namespace ntw {
 		std::map<int, Tower*> Towers;
 
 	public:
-		/// @brief Метод создания башни
+		/// @brief Метод создания башни по-умолчанию
 		/// @return Созданная башня
 		Tower* CreateTower();
+
+		/// @overload
+        /// @brief Метод создания башни
+        /// @param size Размер башни 
+        /// @return Созданная башня
+        Tower* CreateTower(const TowerSize& size);
 
 		/// @brief Метод получения башни по её номеру
 		/// @param nTower Номер башни
@@ -50,7 +55,12 @@ namespace ntw {
 		/// @param nSender Башня - источник сигнала
 		/// @param nListener Башня - слушатель
 		/// @deprecated
-		void ConnectTowers(int nSender, int nListener);
+		void ConnectTowers(int nSender, int nReciver);
+
+        /// @brief Метод разъединения башен в сети
+        /// @param nSender Башня - источник сигнала
+        /// @param nReciver Башня - слушатель
+        void DisconnectTowers(int nSender, int nReciver);
 
 	};
 

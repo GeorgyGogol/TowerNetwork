@@ -4,6 +4,7 @@
 /// @brief Файл с классом узла
 
 #include <vector>
+#include "TowerSize.h"
 
 /// @brief Пространство имен проекта
 namespace ntw {
@@ -27,6 +28,10 @@ namespace ntw {
             TowerNode();
             TowerNode(const TowerNode& src);
             TowerNode(TowerNode&& from) noexcept;
+            
+            /// @brief Конструктор с параметрами
+            /// @param size Размер - лимит подключений
+            TowerNode(const TowerSize& size);
 
             virtual ~TowerNode();
 
@@ -40,6 +45,8 @@ namespace ntw {
             /// @brief Связанные ноды
             /// @details "Подписчики", которым башня рассылает сообщение
             std::vector<TowerNode*> ConnectedSubs;
+
+            int maxSize; ///< Максимальный размер
 
         protected:
             /// @brief Метод добавления соединения
@@ -57,6 +64,9 @@ namespace ntw {
             /// @return Код ошибки
             /// @overload
             int removeConnect(int nConnection);
+
+            /// @brief Метод для разрыва последнего добавленного соединения
+            void removeLastConnect();
 
             /// @brief Метод получения итератора на первое соединение
             /// @return Итератор на первую башню
@@ -82,6 +92,10 @@ namespace ntw {
             /// @brief Метод для получения количества подсоединенных башен
             /// @return Количество "слуштелей"
             int getConnectedCount() const noexcept;
+
+            /// @brief Метод получения лимита подключений
+            /// @return Максимальное число подключений
+            int getConnectedLimit() const noexcept;
 
             /// @brief Метод получения башни по номеру соединения
             /// @param nConnection Номер в списке соединений

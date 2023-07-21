@@ -22,7 +22,7 @@ namespace ntw
      * Для упрощения восприятия каждая башния имеет свой номер.
     */
     class Tower : 
-        protected serv::Logger, 
+        protected serv::Logger,
         public abstr::TowerNode
     {
     public:
@@ -30,18 +30,24 @@ namespace ntw
         /// @param number Уникальный номер башни
         Tower(int number);
 
+        /// @brief Конструктор башни
+        /// @param number Уникальный номер башни
+        Tower(int number, TowerSize towerSize);
+
         ~Tower() = default;
 
     private:
         int TowerNumber; ///< Уникальный номер в сети
+
+        /// @brief Размер башни
+        /// @details Допустимое количество соединений
+        TowerSize ConnMaxCount = TowerSize::Default;
 
         /// @brief Должна ли башня давать ответ
         bool IsNeedSendAnswer = false;
 
         /// @brief Ответная информация
         int AnswerData = -1;
-
-        //void init()
 
         /// @brief Служебный метод рассылки подписчикам
         /// @param signal Рассылаемый сигнал
@@ -53,6 +59,10 @@ namespace ntw
         /// @brief Получить номер башни
         /// @return Уникальный номер башни
         int getTowerNumber() const noexcept;
+
+        /// @brief Получить размер башни
+        /// @return Размер башни
+        TowerSize getTowerSize() const noexcept;
 
         /**
          * @name Ответ на сигнал
@@ -89,6 +99,14 @@ namespace ntw
         /// @brief Метод для установления двусторонней связи с целевой башней
         /// @param pTower Башня, с которой соединяем
         void ConnectTwoWayWith(Tower* pTower);
+
+        /// @brief Метод для разрыва соединения с башней
+        /// @param pTower Башня, соединения с которой убираем соединение
+        void DisconnectWith(Tower* pTower);
+
+        /// @brief Метод разрыва связи
+        /// @param connectNumber Номер разрываемого соединения
+        void DisconnectOn(int connectNumber);
         /** @} */
 
 
@@ -101,6 +119,11 @@ namespace ntw
         /// @param data Отправляемая информация в сигнале
         /// @param resend Флаг о том, что сигнал нужно переслать своим подписчикам
         void Send(int data, bool resend = false);
+
+        /// @brief Метод отправки сигнала по номеру соединения
+        /// @param data Отправляемая информация в сигнале
+        /// @param numConnection Номер соединения, по которому отправляем
+        void SendBy(int data, int numConnection, bool resend = false);
 
         /// @brief Метод получения сигнала
         /// @param signal Сигнал :)

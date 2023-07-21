@@ -8,7 +8,14 @@ ntw::Tower::Tower(int number) :
 	abstr::TowerNode(),
 	TowerNumber(number)
 {
-	log() << "Created tower " << int(this) << " num " << TowerNumber << "\n";
+	log() << "Created Default tower " << int(this) << " num " << TowerNumber << "\n";
+}
+
+ntw::Tower::Tower(int number, TowerSize towerSize) :
+    abstr::TowerNode(towerSize),
+    TowerNumber(number)
+{
+    log() << "Created "<< to_char(towerSize) <<" tower " << int(this) << " num " << TowerNumber << "\n";
 }
 
 //ntw::Tower::~Tower()
@@ -28,6 +35,11 @@ void ntw::Tower::sendToListeners(const Signal& signal)
 int ntw::Tower::getTowerNumber() const noexcept
 {
     return TowerNumber;
+}
+
+ntw::TowerSize ntw::Tower::getTowerSize() const noexcept
+{
+    return ConnMaxCount;
 }
 
 bool ntw::Tower::isHaveAnswer() const noexcept
@@ -63,9 +75,16 @@ void ntw::Tower::ConnectWith(Tower* pTower)
         break;
     
     case 0:
-    default:
         message = "Connected with "
             + std::to_string(pTower->getTowerNumber());
+        break;
+
+    case 4:
+        message = "Connection slots is full, cannot connect";
+        break;
+
+    default:
+        message = "Not register error catched";
         break;
     }
 
@@ -99,6 +118,12 @@ void ntw::Tower::ConnectTwoWayWith(Tower* pTower)
 				+" already connected with "
 				+ "Tower " + std::to_string(TowerNumber);
 			break;
+
+        case 4:
+            message =
+                "Tower " + std::to_string(pTower->getTowerNumber())
+                + " reached connection limit";
+            removeLastConnect();
 			break;
 
 		default:
@@ -118,6 +143,12 @@ void ntw::Tower::ConnectTwoWayWith(Tower* pTower)
 				+ " already connected with "
 				+ "Tower " + std::to_string(pTower->getTowerNumber());
             break;
+
+        case 4:
+            message =
+                "On Tower " + std::to_string(TowerNumber)
+                + " reached connection limit";
+            break;
         
         default:
             break;
@@ -136,11 +167,80 @@ void ntw::Tower::ConnectTwoWayWith(Tower* pTower)
     }
 }
 
+void ntw::Tower::DisconnectWith(Tower* pTower)
+{
+    std::string message;
+    int error = removeConnect(pTower);
+
+    switch (error)
+    {
+    case 0:
+        message = "Disconnected with " +
+            std::to_string(pTower->getTowerNumber());
+        break;
+
+    case 3:
+        message = "Connection is not defined";
+        break;
+
+    default:
+        break;
+    }
+
+    if (error)
+        logError(message, TowerNumber);
+    else
+        logPrint(message, TowerNumber);
+}
+
+void ntw::Tower::DisconnectOn(int connectNumber)
+{
+    std::string message;
+    int error = removeConnect(connectNumber);
+
+    switch (error)
+    {
+    case 0:
+        message = "Connection " +
+            std::to_string(connectNumber) +
+            " was removed. Numbering updated";
+        break;
+
+    case 3:
+        message = "Connection is not defined";
+        break;
+
+    default:
+        break;
+    }
+
+    if (error)
+        logError(message, TowerNumber);
+    else
+        logPrint(message, TowerNumber);
+}
+
 void ntw::Tower::Send(int data, bool resend)
 {
     Signal sig(this, data);
     if (resend) sig.Type = SignalType::Resend;
     sendToListeners(sig);
+}
+
+void ntw::Tower::SendBy(int data, int numConnection, bool resend)
+{
+    //std::string errorMessage = "";
+
+    if (numConnection < 0 || numConnection >= getConnectedCount()) {
+        logError("Connection is not exists", TowerNumber);
+        return;
+    }
+
+    Tower* pReciver = static_cast<Tower*>(getAt(numConnection));
+    Signal sig(this, data);
+    if (resend) sig.Type = SignalType::Resend;
+    pReciver->Recieve(sig);
+
 }
 
 void ntw::Tower::Recieve(const Signal& signal)
@@ -153,7 +253,9 @@ void ntw::Tower::Recieve(const Signal& signal)
     }
 
     if (signal.Type == SignalType::Resend) {
-        sendToListeners(signal);
+        Signal sigToListeners = signal;
+        sigToListeners.Sender = this;
+        sendToListeners(sigToListeners);
         Signal answer(SignalType::Answer, this, getConnectedCount());
         signal.Sender->Recieve(answer);
     }

@@ -15,7 +15,7 @@ ntw::Command<TyValue>::Command(int nAgruments) :
 }
 
 template<typename TyValue>
-ntw::Command<TyValue>::Command(ComandType type, TyValue arg) :
+ntw::Command<TyValue>::Command(CommandType type, TyValue arg) :
 	Type(type),
 	Arg(arg)
 {
@@ -90,10 +90,13 @@ ntw::Command<TyValue>& ntw::Command<TyValue>::operator=(Command&& src) noexcept
 template<typename TyValue>
 TyValue& ntw::Command<TyValue>::operator[](int index)
 {
+
 	if (!NArgs && index == 0) {
 		return Arg;
 	}
 	//else throw std::invalid_argument("Command have only one argument");
+
+    if (index < 0) index = NArgs + index;
 
 	if (index < 0 || index >= NArgs) throw std::out_of_range("command index");
 
@@ -111,6 +114,15 @@ void ntw::Command<TyValue>::setArgCount(int nAgruments)
 		VArg = new TyValue[nAgruments];
 		NArgs = nAgruments;
 	}
+}
+
+template<typename TyValue>
+void ntw::Command<TyValue>::setArgCount(int nAgruments, TyValue defValue)
+{
+    setArgCount(nAgruments);
+    for (int i = 0; i < NArgs; ++i) {
+        VArg[i] = defValue;
+    }
 }
 
 template<typename TyValue>

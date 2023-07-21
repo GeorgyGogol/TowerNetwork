@@ -24,8 +24,8 @@ std::string StructPrinter::SubStructure(Tower* pNode, int step, int nSub)
         out += " Ans:" + std::to_string(pNode->getAnswer());
 
     int nSubs = pNode->getConnectedCount();
-    if (nSubs)
-        out += " SubsCnt:" + std::to_string(nSubs);
+    out += " Subs:" + std::to_string(nSubs);
+    out += "/" + std::to_string(pNode->getConnectedLimit());
 
     out += "\n";
     AlreadyPrinted.insert(pNode);
